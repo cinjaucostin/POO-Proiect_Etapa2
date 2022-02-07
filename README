@@ -1,0 +1,51 @@
+########### PROIECT ETAPA 2 ###########
+- Aceasta etapa reprezinta un update pentru prima etapa(partea de parsare din fisierele de input
+si scrierea in fisierele de output ramane in mare parte aceeasi, cu exceptia unor mici detalii,
+mai exact aparitia unor campuri in clasele din ierarhie, precum:
+    -niceScoreBonus si elf pentru Child.
+    -quantity pentru Gift.
+    -strategy pentru AnnualChange.
+    -elf si pentru ChildrenUpdate.
+- O schimbare in ceea ce priveste formarea fisierului de output este reprezentata de necesitatea
+definirii unei alte clase pentru un obiect de tip Gift, si anume:GiftOutput, deoarece la aceasta
+etapa el are si un camp quantity pe care noi nu ne dorim sa il includem in output.
+- Noile functionalitati ale proiectului(elfii ce pot schimba bugetul alocat unui copil sau
+care ii pot oferi acestuia un cadou in caz ca nu a primit niciunul si strategiile de impartire
+a cadourilor catre copii) le-am implementat cu ajutorul a doua design pattern-uri:
+    -Strategy:
+        ->  Acesta se potriveste destul de bine in cazul nostru deoarece trebuie sa implementam
+        mai multe modalitati de impartire a cadourilor.
+        ->  Initial am creat o interfata GiftsAssignStrategy ce declara o metoda assignGifts pe care
+        fiecare clasa ce implementeaza interfata trebuie sa o defineasca.
+        ->  Ulterior, am definit 3 clase ce implementeaza interfata GiftsAssignStrategy:
+            *  IdStrategy: strategie de asignare a cadourilor in care criteriul este reprezentat
+            de id-ul copiilor.
+            *  NiceScoreCityStrategy: strategie in care modul de impartire al cadourilor este influentat
+            atat de media orasului in care copilul locuieste cat si de id-ul acestuia.
+            *  NiceScoreStrategy: strategie in care modul de impartire este influentat in principal de
+            media copiilor, dar si de id-ul acestora in care se gasesc copii cu medii egale.
+    -Factory:
+        -> Am folosit acest design pattern pentru crea:
+            *  obiecte de tip GiftsAssignStrategy, mai exact instante ale claselor ce implementeaza
+            aceasta interfata: IdStrategy, NiceScoreCityStrategy si NiceScoreStrategy.
+            *  obiecte de tip AnnualOutput.
+            *  obiecte de tip Elf, mai precis instante ale claselor ce extind aceasta clasa abstracta
+            Elf despre care voi vorbi in continuare.
+- Dupa cum am specificat si mai sus, noua functionalitate cu elfi am implementat-o cu ajutorul unei
+clase abstracte Elf ce contine o serie de campuri necesare pentru ca un Elf sa isi poata faca sarcinile
+cat si o metoda abstracta elfAction(in care se defineste sarcina elf-ului in functie de tipul sau) ce
+trebuie implementata de toate clasele ce extind clasa Elf(in caz contrar aceste clase vor fi si ele abstracte).
+- Am definit 4 clase ce extind clasa abstracta Elf, cate una pentru fiecare tip de elf: BlackElf, PinkElf,
+YellowElf si WhiteElf. Pentru fiecare in parte am implementat metoda elfAction astfel incat aceasta sa
+realizeze actiunea elfului respectiv asa cum se specifica in cerinta.
+- De asemenea am mai realizat mici optimizari, in principal de lizibilitate a codului si a impartirii
+sarcinilor in mai multe clase si metode:
+    -> Acum obiectul de tip AnnualOutput nu se mai creeaza in metoda execute() din clasa Simulator
+    ci prin apelare metodei createAnnualOutput() din clasa de tip factory AnnualOutputFactory.
+    -> Initializarea informatiilor si curatarea acestora din Database inainte si dupa fiecare test
+    se realizeaza prin apelarea din Main a unor functii special definite in clasa singleton Database.
+    -> Actualizarea listei de preferinte a unui copil se realizeaza in updateAndExecute() doar prin apelul
+    unei functii special definite in clasa Utils.
+    -> Simularea unui test se realizeaza prin apelul unei functii din clasa Utils.
+- Flow-ul simularilor se poate observa in cele doua metode din clasa Simulator.
+
